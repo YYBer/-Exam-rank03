@@ -137,13 +137,13 @@ char	*get_next_line(int fd)
 		    b_read = read(fd, buffer, BUFFER_SIZE);
 		    buffer[b_read] = 0;
 		    result = strjoin(result,buffer,b_read);
+	    }
             if (b_read < 0)
 	        {
                 free(buffer);
                 buffer = NULL;
                 return NULL;
-	        }
-	    }
+	    	}
 	    flag = 1;
     }
     free(buffer);
