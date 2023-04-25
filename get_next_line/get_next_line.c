@@ -29,35 +29,31 @@ char    ft_strlen(char *str)
     return i;
 }
 
-char *ft_strcpy(char *str, char *s2, int len)
+char	*ft_strdup(char *str)
 {
-    int i;
+	int	i;
+	int	len;
+	char *newstr;
 
-    i = 0;
-    str = malloc(sizeof(char) * (len) + 1);
-    if(!str)
-        return 0;
-    while( i < len)
-    {
-        str[i] = s2[i];
-        i++;
-    }
-    str[i] = 0;
-    return str;
+	len = ft_strlen(str);
+	newstr = (char *)malloc(sizeof(newstr) * (len + 1));
+	newstr[len] = 0;
+	i = 0;
+	while(str[i])
+	{
+		newstr[i] = str[i];
+		i++;
+	}
+	return (newstr);
 }
-char    *strjoin(char *s1, char *s2, int len)
+char    *strjoin(char *s1, char *s2)
 {
     int i;
     int j;
     char *str;
 
-    if (!s2)
-        return NULL;
     if (!s1)
-    {
-        str = NULL;
-        return (ft_strcpy(str, s2, len));
-    }
+        s1 = ft_strdup("");
     str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)) + 1);
     if (!str)
         return NULL;
@@ -69,7 +65,7 @@ char    *strjoin(char *s1, char *s2, int len)
     }
     free(s1);
     j = 0;
-    while(s2[j] && j < len)
+    while(s2[j])
     {
         str[i] = s2[j];
         i++;
@@ -86,10 +82,12 @@ int ft_checklen(char *str, int c)
     while(str[i])
     {
         if (str[i] == c)
-            break ;
+            return i;
         i++;
     }
-    return i;
+    if (str[i] == 0)
+    	return (-1);
+    return (-2);
 }
 
 char*   ft_substr(char *str, int i)
@@ -136,24 +134,26 @@ char	*get_next_line(int fd)
 	    {
 		    b_read = read(fd, buffer, BUFFER_SIZE);
 		    buffer[b_read] = 0;
-		    result = strjoin(result,buffer,b_read);
-	    }
+		    result = strjoin(result,buffer);
+		}
             if (b_read < 0)
 	        {
                 free(buffer);
                 buffer = NULL;
                 return NULL;
-	    	}
+	        }
 	    flag = 1;
     }
     free(buffer);
     buffer = NULL;
     len = ft_checklen(&result[i], '\n');
     line = ft_substr(&result[i], len + 1);
-    if (flag == 1 && result[i] == '\0')
+    if (flag == 1 && len == -1)
     {
+    	line = ft_strdup(result);
     	free(result);
         result = NULL;
+        return (line);
     }
     i = i + len + 1;
     return (line);
